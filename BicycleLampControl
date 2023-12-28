@@ -1,0 +1,93 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+public class BicycleLampControl extends JFrame {
+    private JPanel lampPanel;
+    private JButton button1;
+    private JButton button2;
+
+    private enum LampState { OFF, RED_ON, RED_FLASHING, WHITE_ON, WHITE_FLASHING }
+    private LampState currentState;
+
+    public BicycleLampControl() {
+        lampPanel = new JPanel();
+        lampPanel.setLayout(new BorderLayout());
+        lampPanel.setBackground(Color.BLACK);  // Set the initial background color to black
+
+        button1 = new JButton("Button 1");
+        button2 = new JButton("Button 2");
+
+        currentState = LampState.OFF;
+
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleButton1Click();
+            }
+        });
+
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleButton2Click();
+            }
+        });
+
+        setLayout(new BorderLayout());
+        add(lampPanel, BorderLayout.CENTER);
+        add(button1, BorderLayout.WEST);
+        add(button2, BorderLayout.EAST);
+
+        setTitle("Bicycle Lamp Controller");
+        setSize(300, 100);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void handleButton1Click() {
+        switch (currentState) {
+            case OFF:
+                currentState = LampState.RED_ON;
+                lampPanel.setBackground(Color.RED);
+                break;
+            case RED_ON:
+                currentState = LampState.RED_FLASHING;
+                lampPanel.setBackground(Color.RED);
+                break;
+            case RED_FLASHING:
+                currentState = LampState.OFF;
+                lampPanel.setBackground(Color.BLACK);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void handleButton2Click() {
+        switch (currentState) {
+            case RED_ON:
+            case RED_FLASHING:
+                currentState = LampState.WHITE_ON;
+                lampPanel.setBackground(Color.WHITE);
+                break;
+            case WHITE_ON:
+                currentState = LampState.RED_ON;
+                lampPanel.setBackground(Color.RED);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new BicycleLampControl();
+            }
+        });
+    }
+}
